@@ -10,10 +10,8 @@ app.get("/", (req, res) => {
   res.send("helloooo!!!");
 });
 
-
 app.use(express.json());
-app.use("/api/v1", authRouter)
-
+app.use("/api/v1", authRouter);
 
 connectDB()
   .then(() => {
