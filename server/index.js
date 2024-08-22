@@ -1,6 +1,7 @@
 import express from "express";
 import connectDB from "./db/index.js";
 import dotenv from "dotenv";
+import { router as authRouter } from "./routes/user.route.js";
 dotenv.config();
 
 const app = express();
@@ -8,6 +9,11 @@ const app = express();
 app.get("/", (req, res) => {
   res.send("helloooo!!!");
 });
+
+
+app.use(express.json());
+app.use("/api/v1", authRouter)
+
 
 connectDB()
   .then(() => {
@@ -17,12 +23,12 @@ connectDB()
       console.log(`server is running on: ${port}`);
     });
 
-    app.on("error", (error) => {
-      console.log("error: ", error);
-      throw error;
+    app.on("error", (err) => {
+      console.log("error: ", err);
+      throw err;
     });
   })
-  .catch((error) => {
-    console.log("mongoDB connection failed! ", error);
+  .catch((err) => {
+    console.log("mongoDB connection failed", err);
     process.exit(1);
   });
