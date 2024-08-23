@@ -2,6 +2,7 @@ import express from "express";
 import connectDB from "./db/index.js";
 import dotenv from "dotenv";
 import { router as authRouter } from "./routes/user.route.js";
+import { router as transactionRouter } from "./routes/transaction.route.js";
 dotenv.config();
 
 const app = express();
@@ -12,6 +13,7 @@ app.get("/", (req, res) => {
 
 app.use(express.json());
 app.use("/api/v1", authRouter);
+app.use("/api/v1", transactionRouter);
 
 connectDB()
   .then(() => {
