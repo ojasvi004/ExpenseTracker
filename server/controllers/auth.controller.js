@@ -55,3 +55,13 @@ export const login = async (req, res) => {
     return res.status(500).json({ msg: error });
   }
 };
+
+export const logout = async (req, res) => {
+  try {
+    res
+      .cookie("access_token", "", { httpOnly: true })
+      .json({ msg: "logout successful" });
+  } catch (error) {
+    return res.status(500).json({ msg: error });
+  }
+};
