@@ -27,10 +27,29 @@ export const addTransaction = async (req, res) => {
   }
 };
 
-export const showTransaction = async (req, res) => {
+export const showAllTransactions = async (req, res) => {
   try {
     const transactions = await Transaction.find({});
     return res.status(200).json({ msg: transactions });
+  } catch (error) {
+    return res.status(500).json({ msg: error });
+  }
+};
+
+export const deleteTransaction = async (req, res) => {
+  try {
+    const transactionId = req.params.id;
+    // const userId = req.body.userId;
+
+    // const user = await User.findById(userId);
+    // if (!user) {
+    //   return res.status(400).json({ msg: "user doesn't exist" });
+    // }
+    const transactionElement = await Transaction.findByIdAndDelete(transactionId);
+    if (!transactionElement) {
+      return res.status(401).json({ msg: "transaction not found" });
+    }
+    res.status(200).json({ msg: "deleted successfully" });
   } catch (error) {
     return res.status(500).json({ msg: error });
   }
