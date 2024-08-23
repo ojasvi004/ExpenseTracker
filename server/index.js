@@ -1,5 +1,6 @@
 import express from "express";
 import connectDB from "./db/index.js";
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import { router as authRouter } from "./routes/user.route.js";
 import { router as transactionRouter } from "./routes/transaction.route.js";
@@ -12,6 +13,8 @@ app.get("/", (req, res) => {
 });
 
 app.use(express.json());
+app.use(cookieParser());
+
 app.use("/api/v1", authRouter);
 app.use("/api/v1", transactionRouter);
 
