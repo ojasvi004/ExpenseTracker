@@ -6,11 +6,11 @@ export const addTransaction = async (req, res) => {
     req.body;
   try {
     if (!title || !amount || !description || !category || !transactionType) {
-      return res.status(401).json({ msg: "fill all fields" });
+      return res.status(400).json({ msg: "fill all fields" });
     }
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(402).json({ msg: "user doesn't exist" });
+      return res.status(404).json({ msg: "user doesn't exist" });
     }
 
     const response = await Transaction.create({
@@ -39,17 +39,37 @@ export const showAllTransactions = async (req, res) => {
 export const deleteTransaction = async (req, res) => {
   try {
     const transactionId = req.params.id;
-    // const userId = req.body.userId;
-
-    // const user = await User.findById(userId);
-    // if (!user) {
-    //   return res.status(400).json({ msg: "user doesn't exist" });
-    // }
-    const transactionElement = await Transaction.findByIdAndDelete(transactionId);
+    const transactionElement =
+      await Transaction.findByIdAndDelete(transactionId);
     if (!transactionElement) {
-      return res.status(401).json({ msg: "transaction not found" });
+      return res.status(404).json({ msg: "transaction not found" });
     }
     res.status(200).json({ msg: "deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ msg: error });
+  }
+};
+
+export const updateTransaction = async (req, res) => {
+  try {
+    const transactionId = req.params.id;
+    const { title, amount, category, description, userId, transactionType } =
+      req.body;
+
+    const transaction = await Transaction.findById(transactionId);
+    if (!transaction) {
+      return res.status(404).json({ msg: "transaction not found" });
+    }
+
+    transaction.title = title;
+    transaction.amount = amount;
+    transaction.category = category;
+    transaction.description = description;
+    transaction.transactionType = transactionType;
+
+    await transaction.save();
+
+    res.status(200).json(transaction);
   } catch (error) {
     return res.status(500).json({ msg: error });
   }

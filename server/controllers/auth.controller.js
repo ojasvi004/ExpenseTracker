@@ -9,7 +9,7 @@ export const register = async (req, res) => {
   try {
     const checkUsername = await User.findOne({ username });
     if (checkUsername) {
-      return res.status(400).json({ msg: "username already exists" });
+      return res.status(409).json({ msg: "username already exists" }); 
     }
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
@@ -20,7 +20,7 @@ export const register = async (req, res) => {
       password: hashedPassword,
     });
 
-    res.json(user);
+    res.status(201).json(user);
   } catch (err) {
     res.status(500).json({ msg: err });
   }
@@ -31,11 +31,11 @@ export async function login(req, res) {
 
   try {
     const user = await User.findOne({ username });
-    if (!user) return res.status(404).json({ msg: "user not found" });
+    if (!user) return res.status(404).json({ msg: "user not found" }); 
 
     const isPasswordValid = bcrypt.compareSync(password, user.password);
     if (!isPasswordValid)
-      return res.status(401).json({ msg: "invalid password" });
+      return res.status(401).json({ msg: "invalid password" }); 
 
     const payload = { username, id: user._id };
 
@@ -63,18 +63,19 @@ export async function login(req, res) {
     return res.status(500).json({ msg: error });
   }
 }
+
 export async function refreshToken(req, res) {
   const { refresh_token } = req.cookies;
 
   if (!refresh_token) {
-    return res.status(400).json({ msg: "refresh token doesn't exist" });
+    return res.status(400).json({ msg: "refresh token doesn't exist" }); 
   }
   try {
     const token = jwt.verify(refresh_token, process.env.REFRESH_TOKEN_SECRET);
-    const user = User.findOne({ username });
+    const user = await User.findOne({ username: token.username }); 
 
     if (!user || user.refreshToken !== refresh_token) {
-      return res.status(402).json({ msg: "invalid refresh token" });
+      return res.status(403).json({ msg: "invalid refresh token" });
     }
 
     const payload = { username: token.username, id: token.id };
@@ -114,8 +115,9 @@ export const logout = async (req, res) => {
   try {
     res
       .cookie("access_token", "", { httpOnly: true })
-      .json({ msg: "logout successful" });
+      .cookie("refresh_token", "", { httpOnly: true })
+      .status(200).json({ msg: "logout successful" }); 
   } catch (error) {
-    return res.status(500).json({ msg: error });
+    return res.status(500).json({ msg: error }); 
   }
 };
