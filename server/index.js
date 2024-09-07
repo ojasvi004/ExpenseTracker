@@ -2,11 +2,21 @@ import express from "express";
 import connectDB from "./db/index.js";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import cors from "cors";
 import { router as authRouter } from "./routes/user.route.js";
 import { router as transactionRouter } from "./routes/transaction.route.js";
 dotenv.config();
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PATCH", "DELETE", "PUT"],
+    allowedHeaders: ["Content-Type"],
+    credentials: true,
+  })
+);
 
 app.get("/", (req, res) => {
   res.send("helloooo!!!");
@@ -17,6 +27,8 @@ app.use(cookieParser());
 
 app.use("/api/v1", authRouter);
 app.use("/api/v1", transactionRouter);
+
+
 
 connectDB()
   .then(() => {
