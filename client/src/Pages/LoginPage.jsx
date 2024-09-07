@@ -1,10 +1,13 @@
 import { useState, useContext } from "react";
 import UserContext from "../context/UserContext.js";
+import { useNavigate } from "react-router-dom";
+
 import axios from "axios";
 
 function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const { setUser } = useContext(UserContext);
 
@@ -24,6 +27,7 @@ function LoginPage() {
         alert("login successful");
         const user = response.data;
         setUser(user);
+        navigate("/expenses");
       }
     } catch (error) {
       alert("invalid credential");
