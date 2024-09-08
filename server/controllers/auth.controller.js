@@ -55,7 +55,12 @@ export const login = asyncHandler(async (req, res) => {
       httpOnly: true,
     });
 
-  return res.status(200).json({ msg: "login successful" });
+  return res
+    .status(200)
+    .json({
+      msg: "login successful",
+      user: { id: user._id, username: user.username },
+    });
 });
 
 export const refreshToken = asyncHandler(async (req, res) => {

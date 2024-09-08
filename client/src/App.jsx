@@ -4,6 +4,7 @@ import "./App.css";
 import LoginPage from "./Pages/LoginPage";
 import RegisterPage from "./Pages/RegisterPage";
 import ExpensePage from "./Pages/ExpensePage";
+import { CreatePage } from "./Pages/CreatePage";
 
 function App() {
   return (
@@ -13,6 +14,8 @@ function App() {
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
           <Route path="expenses" element={<ExpensePage />} />
+          <Route path="create" element={<CreatePage />} />
+
         </Route>
       </Routes>
     </Router>

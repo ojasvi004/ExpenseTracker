@@ -25,7 +25,8 @@ function LoginPage() {
 
       if (response.status === 200) {
         alert("login successful");
-        const user = response.data;
+        const user = response.data.user;
+        console.log(user)
         setUser(user);
         navigate("/expenses");
       }
