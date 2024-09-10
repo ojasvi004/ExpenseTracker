@@ -50,17 +50,17 @@ export const login = asyncHandler(async (req, res) => {
   res
     .cookie("access_token", accessToken, {
       httpOnly: true,
+      secure: true,
     })
     .cookie("refresh_token", refreshToken, {
       httpOnly: true,
+      secure: true,
     });
 
-  return res
-    .status(200)
-    .json({
-      msg: "login successful",
-      user: { id: user._id, username: user.username },
-    });
+  return res.status(200).json({
+    msg: "login successful",
+    user: { id: user._id, username: user.username },
+  });
 });
 
 export const refreshToken = asyncHandler(async (req, res) => {
@@ -92,9 +92,11 @@ export const refreshToken = asyncHandler(async (req, res) => {
   res
     .cookie("access_token", newAccessToken, {
       httpOnly: true,
+      secure: true,
     })
     .cookie("refresh_token", newRefreshToken, {
       httpOnly: true,
+      secure: true,
     });
 
   return res.status(200).json({ msg: "tokens refreshed successfully woohoo!" });
@@ -102,8 +104,8 @@ export const refreshToken = asyncHandler(async (req, res) => {
 
 export const logout = asyncHandler(async (req, res) => {
   res
-    .cookie("access_token", "", { httpOnly: true })
-    .cookie("refresh_token", "", { httpOnly: true })
+    .cookie("access_token", "", { httpOnly: true, secure: true })
+    .cookie("refresh_token", "", { httpOnly: true, secure: true })
     .status(200)
     .json({ msg: "logout successful" });
 });
